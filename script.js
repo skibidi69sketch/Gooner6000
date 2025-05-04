@@ -8,7 +8,6 @@ const tagDisplay = document.getElementById('current-tag-display');
 let currentTags = '';
 let lastRequestSuccessful = false;
 
-// Format tags properly for the API
 function formatTags(input) {
     if (!input || input.trim() === '') return '';
     
@@ -19,21 +18,17 @@ function formatTags(input) {
         .join('+');
 }
 
-// Main function to fetch an image
 async function fetchImage() {
     try {
-        // Show loading status
         imageStatus.textContent = "Loading...";
         imageStatus.style.display = "block";
         randomImage.style.display = "none";
         
-        // Decide on URL based on whether we have tags
         const formattedTags = formatTags(currentTags);
         const url = buildApiUrl(formattedTags);
         
         console.log(`Fetching from: ${url}`);
         
-        // Make the request - explicitly requesting XML
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -42,26 +37,21 @@ async function fetchImage() {
         
         const xmlText = await response.text();
         
-        // Parse XML
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         
-        // Check for parser errors
         if (xmlDoc.querySelector("parsererror")) {
             console.error("XML parsing error", xmlDoc.querySelector("parsererror"));
             throw new Error("Failed to parse XML response");
         }
         
-        // Get all post elements
         const posts = xmlDoc.querySelectorAll("post");
         console.log(`Found ${posts.length} posts in response`);
         
         if (posts && posts.length > 0) {
-            // Pick a random post
             const randomIndex = Math.floor(Math.random() * posts.length);
             const post = posts[randomIndex];
             
-            // Get image URL
             const fileUrl = post.getAttribute("file_url");
             console.log(`Selected image URL: ${fileUrl}`);
             
@@ -72,7 +62,6 @@ async function fetchImage() {
             displayImage(fileUrl);
             lastRequestSuccessful = true;
             
-            // Update tag display
             updateTagDisplay(true);
         } else {
             console.log("No posts found in the response");
@@ -84,28 +73,22 @@ async function fetchImage() {
     }
 }
 
-// Build the appropriate API URL
 function buildApiUrl(tags) {
-    // Calculate a reasonable page number based on tag specificity
     const maxPage = tags ? 3 : 20;
     const randomPage = Math.floor(Math.random() * maxPage);
     
-    // Use a higher limit to increase chances of results
     return `https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&limit=100&pid=${randomPage}&tags=${encodeURIComponent(tags)}`;
 }
 
-// Function to display an image
 function displayImage(url) {
     randomImage.src = url;
     randomImage.alt = "Random Image";
     
-    // Hide status once image loads
     randomImage.onload = () => {
         imageStatus.style.display = "none";
         randomImage.style.display = "block";
     };
     
-    // Handle image loading error
     randomImage.onerror = () => {
         imageStatus.textContent = "Error loading image. Try again.";
         imageStatus.style.display = "block";
@@ -113,22 +96,17 @@ function displayImage(url) {
     };
 }
 
-// Handle when no results are found
 function handleNoResults() {
     lastRequestSuccessful = false;
     
-    // If we had tags, try without them
     if (currentTags) {
         imageStatus.textContent = `No results found for "${currentTags}". Showing random image instead...`;
         
-        // Save current tags before clearing
         const savedTags = currentTags;
         
-        // Try again with no tags
         currentTags = '';
         fetchRandomImage();
         
-        // Restore tags for display purposes
         currentTags = savedTags;
         updateTagDisplay(false);
     } else {
@@ -138,7 +116,6 @@ function handleNoResults() {
     }
 }
 
-// Handle errors
 function handleError(message) {
     lastRequestSuccessful = false;
     imageStatus.textContent = `Error: ${message}. Try again later.`;
@@ -146,7 +123,6 @@ function handleError(message) {
     randomImage.style.display = "none";
 }
 
-// Update the tag display
 function updateTagDisplay(successful) {
     if (!currentTags) {
         tagDisplay.textContent = 'No tags applied';
@@ -160,7 +136,6 @@ function updateTagDisplay(successful) {
     }
 }
 
-// Main function with retries
 async function fetchRandomImage(retries = 2) {
     try {
         await fetchImage();
@@ -174,7 +149,6 @@ async function fetchRandomImage(retries = 2) {
     }
 }
 
-// Event Listeners
 newImageButton.addEventListener('click', () => fetchRandomImage());
 
 applyTagsButton.addEventListener('click', () => {
@@ -205,7 +179,6 @@ document.getElementById('clear-tags-button').addEventListener('click', () => {
     fetchRandomImage();
 });
 
-// Initialize
 window.onload = () => {
     fetchRandomImage();
 };

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Image Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <aside id="sidebar">
+            <div class="logo">
+                <i class="fas fa-images"></i>
+                <h1>Image Finder</h1>
+            </div>
+            
+            <div class="search-box">
+                <label for="tag-input">Enter Tags:</label>
+                <div class="input-group">
+                    <input type="text" id="tag-input" placeholder="e.g. cat, nature" />
+                    <button id="apply-tags-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <small class="hint">Separate multiple tags with commas</small>
+            </div>
+            
+            <div class="popular-tags">
+                <h3>Popular Tags</h3>
+                <div class="tag-buttons">
+                    <button class="tag-pill" data-tag="1girl">1girl</button>
+                    <button class="tag-pill" data-tag="blonde_hair">blonde_hair</button>
+                    <button class="tag-pill" data-tag="breasts">breasts</button>
+                    <button class="tag-pill" data-tag="blue_eyes">blue_eyes</button>
+                    <button class="tag-pill" data-tag="animated">animated</button>
+                    <button class="tag-pill" data-tag="cum">cum</button>
+                    <button class="tag-pill" data-tag="penis">penis</button>
+                    <button class="tag-pill" data-tag="nipples">nipples</button>
+                </div>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <div id="current-tag-display" class="tag-status">No tags applied</div>
+            <div id="image-container">
+                <div id="image-status">Loading...</div>
+                <img id="random-image" src="" alt="Random Image" />
+            </div>
+            <div class="button-group">
+                <button id="new-image-button">
+                    <i class="fas fa-random"></i> 
+                    Get New Image
+                </button>
+                <button id="clear-tags-button" class="secondary-button">
+                    <i class="fas fa-times"></i>
+                    Clear Tags
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
